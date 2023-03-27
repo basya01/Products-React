@@ -1,3 +1,5 @@
+import { Category } from './Category';
+
 export interface Product {
   id: number;
   title: string;
@@ -7,7 +9,7 @@ export interface Product {
   rating: number;
   stock: number;
   brand: string;
-  category: string;
+  category: Category;
   thumbnail: string;
   images: string[];
 }

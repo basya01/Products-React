@@ -18,7 +18,7 @@ const App = () => {
       <Header />
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
         <Categories />
-        <Products items={products.items} />
+        <Products items={products.items} sx={{ marginTop: 1 }} />
       </Container>
     </div>
   );

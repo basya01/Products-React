@@ -1,13 +1,11 @@
 import {
-  Box,
-  Card,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableProps,
-  TableRow,
+  TableRow
 } from '@mui/material';
 import React from 'react';
 import { Product } from '../types/models';
@@ -47,21 +45,19 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
         <TableBody>
           {items.map((product) => (
             <TableRow key={product.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              {tableHeadElems.map(({ id, key }) =>
-                key === 'thumbnail' ? (
-                  <TableCell>
+              {tableHeadElems.map(({ id, key }) => (
+                <TableCell key={id} component="th" scope="row">
+                  {key === 'thumbnail' ? (
                     <img
                       src={product[key]}
                       alt="product_photo"
                       style={{ maxWidth: 200, maxHeight: 200, objectFit: 'cover' }}
                     />
-                  </TableCell>
-                ) : (
-                  <TableCell key={id} component="th" scope="row">
-                    {product[key]}
-                  </TableCell>
-                )
-              )}
+                  ) : (
+                    product[key]
+                  )}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
