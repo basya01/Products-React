@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <>
       <AppBar position="static" color="secondary">
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
           <Toolbar variant="dense" disableGutters component="nav" sx={{ py: 1 }}>
             <Typography
               variant="h6"
