@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Category } from '../../types/models/Category';
 
 interface FiltersState {
-  page: 0;
+  page: number;
   search: string;
+  category: Category;
 }
 
-const initialState: FiltersState = { page: 0, search: '' };
+const initialState: FiltersState = { page: 1, search: '', category: null };
 
 const productsSlice = createSlice({
   name: 'products',
@@ -14,8 +16,11 @@ const productsSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
+    setCategory(state, action: PayloadAction<Category>) {
+      state.category = action.payload;
+    },
   },
 });
 
-export const { setSearch } = productsSlice.actions;
+export const { setSearch, setCategory } = productsSlice.actions;
 export default productsSlice.reducer;

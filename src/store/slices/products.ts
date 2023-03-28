@@ -13,7 +13,7 @@ interface Returned {
 }
 
 export const fetchProducts = createAsyncThunk('users/fetchProducts', async () => {
-  const { data } = await axios.get(`${API_URL}products/?limit=10`);
+  const { data } = await axios.get(`${API_URL}products?limit=10`);
   return data as Returned;
 });
 

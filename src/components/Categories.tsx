@@ -1,7 +1,9 @@
 import { Box, Chip, styled } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { useState } from 'react';
-import { useFetchCategories } from '../hooks';
+import { useAppDispatch, useAppSelector, useFetchCategories } from '../hooks';
+import { setCategory } from '../store/slices/filters';
+import { Category } from '../types/models/Category';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,20 +28,21 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 const Categories = () => {
   const { categories, status } = useFetchCategories();
-  const [active, setActive] = useState<number>();
+  const category = useAppSelector((state) => state.filters.category);
+  const dispatch = useAppDispatch();
 
-  const handlerCategory = (index: number) => {
-    setActive(index);
+  const handlerCategory = (value: Category) => {
+    dispatch(setCategory(value));
   };
 
   return (
     <StyledBox>
       {categories?.map((item, index) => (
         <Chip
-          sx={active === index ? { background: blue[700], color: '#fff' } : {}}
-          onClick={() => handlerCategory(index)}
+          sx={category === item ? { background: blue[700], color: '#fff' } : {}}
+          onClick={() => handlerCategory(item)}
           label={item}
-          key={index}
+          key={item}
         />
       ))}
     </StyledBox>
