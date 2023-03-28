@@ -20,7 +20,7 @@ interface ParamsUrl {
 const pathname = window.location.pathname;
 const paramsUrl: ParamsUrl = queryString.parse(pathname.slice(1, pathname.length));
 const initialState: FiltersState = {
-  page: paramsUrl.page || 1,
+  page: Number(paramsUrl.page) || 1,
   search: paramsUrl.search || '',
   category: paramsUrl.category || null,
   sort: paramsUrl.sort || '',

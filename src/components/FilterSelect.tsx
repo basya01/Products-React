@@ -11,7 +11,6 @@ const sortParams = {
   rating: 'Рейтинг',
   stock: 'Сток',
 };
-console.log(Object.entries(sortParams));
 const FilterSelect = () => {
   const dispatch = useAppDispatch();
   const sort = useAppSelector((state) => state.filters.sort);
