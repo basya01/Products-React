@@ -26,7 +26,7 @@ export const fetchProducts = createAsyncThunk(
     const searchRoute = search ? '/search' : '';
     const limit = 10;
     const { data } = await axios.get<Returned>(`${API_URL}products${searchRoute || categoryRoute || ''}`, {
-      params: { limit, skip: (page - 1) * limit },
+      params: { limit, skip: (page - 1) * limit, q: search },
     });
     if (!sort) {
       return data;

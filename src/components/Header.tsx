@@ -3,11 +3,12 @@ import { AppBar, InputAdornment, TextField, Toolbar, Typography } from '@mui/mat
 import { Container } from '@mui/system';
 import { useCallback, useState } from 'react';
 import debounce from 'lodash.debounce';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { setSearch } from '../store/slices/filters';
 
 const Header = () => {
-  const [searchValue, setSearchValue] = useState('');
+  const search = useAppSelector((state) => state.filters.search);
+  const [searchValue, setSearchValue] = useState(search);
   const dispatch = useAppDispatch();
 
   const changeSearchDebounce = useCallback(
