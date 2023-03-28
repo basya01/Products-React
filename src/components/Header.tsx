@@ -1,8 +1,27 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, InputAdornment, TextField, Toolbar, Typography } from '@mui/material';
 import { Container } from '@mui/system';
+import { useCallback, useState } from 'react';
+import debounce from 'lodash.debounce';
+import { useAppDispatch } from '../hooks';
+import { setSearch } from '../store/slices/filters';
 
 const Header = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const dispatch = useAppDispatch();
+
+  const changeSearchDebounce = useCallback(
+    debounce((value: string) => {
+      dispatch(setSearch(value));
+    }, 1000),
+    []
+  );
+
+  const handlerSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    changeSearchDebounce(event.target.value);
+    setSearchValue(event.target.value);
+  };
+
   return (
     <>
       <AppBar position="static" color="secondary">
@@ -22,6 +41,8 @@ const Header = () => {
             <TextField
               id="filled-basic"
               variant="standard"
+              value={searchValue}
+              onChange={handlerSearch}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

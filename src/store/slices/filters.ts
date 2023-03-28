@@ -1,20 +1,21 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { LoadingStatus } from '../../types/enums/LoadingStatus';
-import { Product } from '../../types/models';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface FiltersState {
-  page: 0,
-
+  page: 0;
+  search: string;
 }
 
-const initialState: FiltersState = { page: 0 };
+const initialState: FiltersState = { page: 0, search: '' };
 
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    setSearch(state, action: PayloadAction<string>) {
+      state.search = action.payload;
+    },
+  },
 });
 
-export const { } = productsSlice.actions;
+export const { setSearch } = productsSlice.actions;
 export default productsSlice.reducer;
