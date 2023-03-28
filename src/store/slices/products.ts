@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { LoadingStatus } from '../../types/enums/LoadingStatus';
-import { Product } from '../../types/models';
+import { Product, SortType } from '../../types/models';
 import { Category } from '../../types/models/Category';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -16,18 +16,27 @@ interface FetchProductsArgs {
   page: number;
   category: Category;
   search: string;
+  sort: SortType;
 }
 
 export const fetchProducts = createAsyncThunk(
   'users/fetchProducts',
-  async ({ page, category, search }: FetchProductsArgs) => {
+  async ({ page, category, search, sort }: FetchProductsArgs) => {
     const categoryRoute = category ? '/category/' + category : '';
     const searchRoute = search ? '/search' : '';
     const limit = 10;
-    const { data } = await axios.get(`${API_URL}products${searchRoute || categoryRoute || ''}`, {
+    const { data } = await axios.get<Returned>(`${API_URL}products${searchRoute || categoryRoute || ''}`, {
       params: { limit, skip: (page - 1) * limit },
     });
-    return data as Returned;
+    if (!sort) {
+      return data;
+    }
+    if (sort === 'description' || sort === 'title') {
+      data.products.sort((a, b) => String(a[sort]).localeCompare(String(b[sort])));
+      return data;
+    }
+    data.products.sort((a, b) => a[sort] - b[sort]);
+    return data;
   }
 );
 

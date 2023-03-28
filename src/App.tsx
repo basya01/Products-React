@@ -1,33 +1,34 @@
 import { Container } from '@mui/system';
+import queryString from 'query-string';
 import { useEffect } from 'react';
-import { Categories, Header, PaginationProducts, Products } from './components';
+import { useNavigate } from 'react-router-dom';
+import { Categories, FilterSelect, Header, PaginationProducts, Products } from './components';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { fetchProducts } from './store/slices/products';
-import queryString from 'query-string';
-import { useNavigate } from 'react-router-dom';
 
 const App = () => {
   const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.products);
-  const { page, category, search } = useAppSelector((state) => state.filters);
+  const { page, category, search, sort } = useAppSelector((state) => state.filters);
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(fetchProducts({ page, category, search }));
+    dispatch(fetchProducts({ page, category, search, sort }));
     const paramsUrl = queryString.stringify(
-      { category, search },
+      { category, search, page, sort },
       {
         skipNull: true,
         skipEmptyString: true,
       }
     );
     navigate(paramsUrl);
-  }, [page, category, search]);
+  }, [page, category, search, sort]);
 
   return (
     <div className="App">
       <Header />
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
         <Categories />
+        <FilterSelect />
         <Products items={products.items} sx={{ marginTop: 1 }} />
         <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
       </Container>
