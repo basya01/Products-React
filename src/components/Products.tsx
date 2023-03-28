@@ -1,25 +1,21 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableProps,
-  TableRow
-} from '@mui/material';
+import { Button, Paper, Table, TableBody, TableCell, TableHead, TableProps, TableRow } from '@mui/material';
 import React from 'react';
 import { Product } from '../types/models';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import { useDeleteProductById } from '../hooks';
+import { LoadingStatus } from '../types/enums/LoadingStatus';
 
 interface ProductsProps extends TableProps {
   items: Product[];
 }
 
-interface TableHeadElem {
+interface TableElem {
   id: number;
   name: string;
   key: 'id' | 'title' | 'description' | 'price' | 'thumbnail' | 'rating' | 'stock' | 'category';
 }
-const tableHeadElems: TableHeadElem[] = [
+const tableElems: TableElem[] = [
   { id: 1, name: 'ID', key: 'id' },
   { id: 2, name: 'Назва', key: 'title' },
   { id: 3, name: 'Опис', key: 'description' },
@@ -31,20 +27,26 @@ const tableHeadElems: TableHeadElem[] = [
 ];
 
 const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
+  const { deleteProduct, status } = useDeleteProductById();
+  const handlerDelete = (id: number) => {
+    deleteProduct(id);
+  };
+
   return (
     <Paper elevation={5} {...props}>
       <Table sx={{ textTransform: 'capitalize' }}>
         <TableHead>
           <TableRow>
-            {tableHeadElems.map((item) => (
+            {tableElems.map((item) => (
               <TableCell key={item.id}>{item.name}</TableCell>
             ))}
+            <TableCell>Інструменти</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {items.map((product) => (
             <TableRow key={product.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              {tableHeadElems.map(({ id, key }) => (
+              {tableElems.map(({ id, key }) => (
                 <TableCell key={id} component="th" scope="row">
                   {key === 'thumbnail' ? (
                     <img
@@ -57,6 +59,14 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
                   )}
                 </TableCell>
               ))}
+              <TableCell component="th" scope="row">
+                <Button>
+                  <EditIcon sx={{ cursor: 'pointer' }} color="primary" fontSize="large" />
+                </Button>
+                <Button color="error" onClick={() => handlerDelete(product.id)} disabled={status === LoadingStatus.PENDING}>
+                  <DeleteForeverIcon sx={{ cursor: 'pointer' }} color="error" fontSize="large" />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
