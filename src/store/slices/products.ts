@@ -13,19 +13,22 @@ interface Returned {
 }
 
 export const fetchProducts = createAsyncThunk('users/fetchProducts', async () => {
-  const { data } = await axios.get(`${API_URL}products`);
+  const { data } = await axios.get(`${API_URL}products/?limit=10`);
   return data as Returned;
 });
 
-interface PostsState {
+interface ProductsState {
   items: Product[];
+  total: number;
+  skip: number;
+  limit: number;
   status: LoadingStatus;
 }
 
-const initialState: PostsState = { items: [], status: LoadingStatus.IDLE };
+const initialState: ProductsState = { items: [], total: 0, skip: 0, limit: 0, status: LoadingStatus.IDLE };
 
-const postsSlice = createSlice({
-  name: 'posts',
+const productsSlice = createSlice({
+  name: 'products',
   initialState,
   reducers: {
     deleteProductById(state, action: PayloadAction<number>) {
@@ -41,7 +44,10 @@ const postsSlice = createSlice({
         state.status = LoadingStatus.PENDING;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.items.push(...action.payload.products);
+        state.items = [...action.payload.products];
+        state.limit = action.payload.limit;
+        state.skip = action.payload.skip;
+        state.total = action.payload.total;
         state.status = LoadingStatus.SUCCEEDED;
       })
       .addCase(fetchProducts.rejected, (state) => {
@@ -50,5 +56,5 @@ const postsSlice = createSlice({
   },
 });
 
-export const { deleteProductById, clearProducts } = postsSlice.actions;
-export default postsSlice.reducer;
+export const { deleteProductById, clearProducts } = productsSlice.actions;
+export default productsSlice.reducer;

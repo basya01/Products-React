@@ -1,8 +1,7 @@
 import { Container } from '@mui/system';
 import { useEffect } from 'react';
-import { Categories, Header, Products } from './components';
-import { useAppDispatch } from './hooks/useAppDispatch';
-import { useAppSelector } from './hooks/useAppSelector';
+import { Categories, Header, PaginationProducts, Products } from './components';
+import { useAppDispatch, useAppSelector } from './hooks';
 import { fetchProducts } from './store/slices/products';
 
 const App = () => {
@@ -19,6 +18,7 @@ const App = () => {
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
         <Categories />
         <Products items={products.items} sx={{ marginTop: 1 }} />
+        <PaginationProducts />
       </Container>
     </div>
   );

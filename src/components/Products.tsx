@@ -19,7 +19,6 @@ interface TableHeadElem {
   name: string;
   key: 'id' | 'title' | 'description' | 'price' | 'thumbnail' | 'rating' | 'stock' | 'category';
 }
-
 const tableHeadElems: TableHeadElem[] = [
   { id: 1, name: 'ID', key: 'id' },
   { id: 2, name: 'Назва', key: 'title' },
