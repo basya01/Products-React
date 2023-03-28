@@ -29,7 +29,7 @@ const App = () => {
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
         <Categories />
         <Products items={products.items} sx={{ marginTop: 1 }} />
-        <PaginationProducts />
+        <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
       </Container>
     </div>
   );
