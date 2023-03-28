@@ -1,6 +1,5 @@
 import { Box, Chip, styled } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector, useFetchCategories } from '../hooks';
 import { setCategory } from '../store/slices/filters';
 import { Category } from '../types/models/Category';
@@ -32,12 +31,16 @@ const Categories = () => {
   const dispatch = useAppDispatch();
 
   const handlerCategory = (value: Category) => {
+    if (value === category) {
+      dispatch(setCategory(null));
+      return;
+    }
     dispatch(setCategory(value));
   };
 
   return (
     <StyledBox>
-      {categories?.map((item, index) => (
+      {categories?.map((item) => (
         <Chip
           sx={category === item ? { background: blue[700], color: '#fff' } : {}}
           onClick={() => handlerCategory(item)}

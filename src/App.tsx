@@ -11,18 +11,16 @@ const App = () => {
   const products = useAppSelector((state) => state.products);
   const { page, category, search } = useAppSelector((state) => state.filters);
   const navigate = useNavigate();
-
   useEffect(() => {
+    dispatch(fetchProducts({ page, category, search }));
     const paramsUrl = queryString.stringify(
-      { page, category, search },
+      { category, search },
       {
         skipNull: true,
         skipEmptyString: true,
       }
     );
-    
     navigate(paramsUrl);
-    dispatch(fetchProducts());
   }, [page, category, search]);
 
   return (

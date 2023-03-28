@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { LoadingStatus } from '../../types/enums/LoadingStatus';
 import { Product } from '../../types/models';
+import { Category } from '../../types/models/Category';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,11 +12,24 @@ interface Returned {
   skip: number;
   limit: number;
 }
+interface FetchProductsArgs {
+  page: number;
+  category: Category;
+  search: string;
+}
 
-export const fetchProducts = createAsyncThunk('users/fetchProducts', async () => {
-  const { data } = await axios.get(`${API_URL}products?limit=10`);
-  return data as Returned;
-});
+export const fetchProducts = createAsyncThunk(
+  'users/fetchProducts',
+  async ({ page, category, search }: FetchProductsArgs) => {
+    const categoryRoute = category ? '/category/' + category : '';
+    const searchRoute = search ? '/search' : '';
+    const limit = 10;
+    const { data } = await axios.get(`${API_URL}products${searchRoute || categoryRoute || ''}`, {
+      params: { limit, skip: (page - 1) * limit },
+    });
+    return data as Returned;
+  }
+);
 
 interface ProductsState {
   items: Product[];
