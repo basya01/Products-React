@@ -17,8 +17,8 @@ interface ParamsUrl {
   sort?: SortType;
 }
 
-const pathname = window.location.pathname;
-const paramsUrl: ParamsUrl = queryString.parse(pathname.slice(1, pathname.length));
+const search = window.location.search;
+const paramsUrl: ParamsUrl = queryString.parse(search.slice(1, search.length));
 const initialState: FiltersState = {
   page: Number(paramsUrl.page) || 1,
   search: paramsUrl.search || '',

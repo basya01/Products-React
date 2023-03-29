@@ -47,7 +47,7 @@ const App = () => {
         skipEmptyString: true,
       }
     );
-    navigate(paramsUrl);
+    navigate(`?${paramsUrl}`);
   }, [page, category, search, sort]);
 
   const onSubmitCreate = (values: Values) => {
