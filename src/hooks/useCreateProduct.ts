@@ -19,12 +19,6 @@ export const useCreateProduct = () => {
     } catch (error) {
       setStatus(LoadingStatus.FAILED);
     }
-
-    return new Promise((res) => {
-      if (status === LoadingStatus.SUCCEEDED) {
-        res(true);
-      }
-    });
   }, []);
 
   return {

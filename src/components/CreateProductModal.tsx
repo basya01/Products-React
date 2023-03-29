@@ -1,10 +1,11 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from '@mui/material';
 import blue from '@mui/material/colors/blue';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useCreateProduct } from '../hooks';
-import { Category, Product } from '../types/models';
+import { LoadingStatus } from '../types/enums/LoadingStatus';
+import { Category } from '../types/models';
 
 const validationSchema = yup.object({
   title: yup.string().min(7, 'Назва має бути не менше 7 символів').required("Назва обов'язкова"),
@@ -36,7 +37,6 @@ const partOfFields = {
   stock: 'Сток',
   brand: 'Бренд',
 };
-
 type KeyPartOfFields =
   | 'title'
   | 'description'
@@ -48,31 +48,31 @@ type KeyPartOfFields =
 
 const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, categories }) => {
   const { createProduct, status } = useCreateProduct();
+  useEffect(() => {
+    if (status === LoadingStatus.SUCCEEDED) setOpen(false);
+  }, [status]);
+
   const formik = useFormik({
     initialValues: {
-      title: '',
-      description: '',
-      price: '',
-      discountPercentage: '',
-      rating: '',
-      stock: '',
-      brand: '',
-      category: '',
+      title: 'asdasdasd',
+      description:
+        'asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd',
+      price: '123',
+      discountPercentage: '123',
+      rating: '2',
+      stock: '123',
+      brand: 'asdasdasdasads',
+      category: 'smartphones',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const isSuccess = createProduct({
+      createProduct({
         ...values,
         price: +values.price,
         discountPercentage: +values.discountPercentage,
         rating: +values.rating,
         stock: +values.stock,
         category: values.category as Category,
-      });
-      isSuccess.then((isSuccess) => {
-        if (isSuccess) {
-          setOpen(false);
-        }
       });
     },
   });
@@ -82,7 +82,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, 
   };
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title">
+    <Modal open={open} onClose={onClose}>
       <Box
         sx={{
           zIndex: 999,
