@@ -4,15 +4,17 @@ import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Categories,
-  CreateProductModal,
-  FilterSelect,
+  Categories, FilterSelect,
   Header,
+  ModalFormProduct,
   PaginationProducts,
-  Products,
+  Products
 } from './components';
-import { useAppDispatch, useAppSelector, useFetchCategories } from './hooks';
+import { Values } from './components/ModalFormProduct';
+import { useAppDispatch, useAppSelector, useCreateProduct, useFetchCategories } from './hooks';
 import { fetchProducts } from './store/slices/products';
+import { LoadingStatus } from './types/enums/LoadingStatus';
+import { Category } from './types/models';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +23,13 @@ const App = () => {
   const { page, category, search, sort } = useAppSelector((state) => state.filters);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { createProduct, status: productStatus } = useCreateProduct();
+
+  useEffect(() => {
+    if (productStatus === LoadingStatus.SUCCEEDED) {
+      setShowModal(false);
+    }
+  }, [productStatus]);
 
   useEffect(() => {
     dispatch(fetchProducts({ page, category, search, sort }));
@@ -33,6 +42,17 @@ const App = () => {
     );
     navigate(paramsUrl);
   }, [page, category, search, sort]);
+
+  const onSubmit = (values: Values) => {
+    createProduct({
+      ...values,
+      price: +values.price,
+      discountPercentage: +values.discountPercentage,
+      rating: +values.rating,
+      stock: +values.stock,
+      category: values.category as Category,
+    });
+  };
 
   return (
     <div className="App">
@@ -49,7 +69,22 @@ const App = () => {
         <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
       </Container>
       {categories && (
-        <CreateProductModal open={showModal} setOpen={setShowModal} categories={categories} />
+        <ModalFormProduct
+          open={showModal}
+          setOpen={setShowModal}
+          categories={categories}
+          onSubmit={onSubmit}
+          initialValues={{
+            title: '',
+            description: '',
+            price: '',
+            discountPercentage: '',
+            rating: '',
+            stock: '',
+            brand: '',
+            category: '',
+          }}
+        />
       )}
     </div>
   );

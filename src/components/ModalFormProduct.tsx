@@ -22,10 +22,23 @@ const validationSchema = yup.object({
   category: yup.string().required("Категорія обо'язкова"),
 });
 
-interface CreateProductModalProps {
+export interface Values {
+  title: string;
+  description: string;
+  price: string;
+  discountPercentage: string;
+  rating: string;
+  stock: string;
+  brand: string;
+  category: string;
+}
+
+interface ModalFormProductProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   categories: Category[];
+  onSubmit: (values: Values) => void;
+  initialValues: Values;
 }
 
 const partOfFields = {
@@ -37,6 +50,7 @@ const partOfFields = {
   stock: 'Сток',
   brand: 'Бренд',
 };
+
 type KeyPartOfFields =
   | 'title'
   | 'description'
@@ -46,35 +60,18 @@ type KeyPartOfFields =
   | 'stock'
   | 'brand';
 
-const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, categories }) => {
-  const { createProduct, status } = useCreateProduct();
-  useEffect(() => {
-    if (status === LoadingStatus.SUCCEEDED) setOpen(false);
-  }, [status]);
+const ModalFormProduct: React.FC<ModalFormProductProps> = ({
+  open,
+  setOpen,
+  categories,
+  onSubmit,
+  initialValues,
+}) => {
 
   const formik = useFormik({
-    initialValues: {
-      title: '',
-      description:
-        '',
-      price: '',
-      discountPercentage: '',
-      rating: '',
-      stock: '',
-      brand: '',
-      category: '',
-    },
+    initialValues,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createProduct({
-        ...values,
-        price: +values.price,
-        discountPercentage: +values.discountPercentage,
-        rating: +values.rating,
-        stock: +values.stock,
-        category: values.category as Category,
-      });
-    },
+    onSubmit: onSubmit,
   });
 
   const onClose = () => {
@@ -141,4 +138,4 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, 
   );
 };
 
-export default CreateProductModal;
+export default ModalFormProduct;
