@@ -5,6 +5,7 @@ import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Alerts,
   Categories,
   FilterSelect,
   Header,
@@ -154,6 +155,7 @@ const App = () => {
           }}
         />
       )}
+      <Alerts />
     </div>
   );
 };

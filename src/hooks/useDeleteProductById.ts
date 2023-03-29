@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
+import { addAlert } from '../store/slices/alerts';
 import { deleteProductById } from '../store/slices/products';
 import { LoadingStatus } from '../types/enums/LoadingStatus';
 import { Product } from '../types/models';
@@ -18,7 +19,9 @@ export const useDeleteProductById = () => {
       setDeletedProduct(data);
       dispatch(deleteProductById(id));
       setStatus(LoadingStatus.SUCCEEDED);
+      dispatch(addAlert({ text: 'Продукт успішно видалений.', severity: 'success' }));
     } catch (error) {
+      dispatch(addAlert({ text: 'Помилка! Продукт не видалений.', severity: 'error' }));
       setStatus(LoadingStatus.FAILED);
     }
   }, []);
