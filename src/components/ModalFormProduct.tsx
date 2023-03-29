@@ -1,10 +1,8 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from '@mui/material';
 import blue from '@mui/material/colors/blue';
 import { useFormik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import * as yup from 'yup';
-import { useCreateProduct } from '../hooks';
-import { LoadingStatus } from '../types/enums/LoadingStatus';
 import { Category } from '../types/models';
 
 const validationSchema = yup.object({
@@ -35,13 +33,13 @@ export interface Values {
 
 interface ModalFormProductProps {
   open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
   categories: Category[];
   onSubmit: (values: Values) => void;
   initialValues: Values;
 }
 
-const partOfFields = {
+const values = {
   title: 'Назва',
   description: 'Опис',
   price: 'Ціна',
@@ -51,32 +49,21 @@ const partOfFields = {
   brand: 'Бренд',
 };
 
-type KeyPartOfFields =
-  | 'title'
-  | 'description'
-  | 'price'
-  | 'discountPercentage'
-  | 'rating'
-  | 'stock'
-  | 'brand';
+type KeyValue = 'title' | 'description' | 'price' | 'discountPercentage' | 'rating' | 'stock' | 'brand';
 
 const ModalFormProduct: React.FC<ModalFormProductProps> = ({
   open,
-  setOpen,
+  onClose,
   categories,
   onSubmit,
   initialValues,
 }) => {
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: onSubmit,
+    enableReinitialize: true,
   });
-
-  const onClose = () => {
-    setOpen(false);
-  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -99,17 +86,17 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
         onSubmit={formik.handleSubmit}
         component="form"
       >
-        {Object.keys(partOfFields).map((key) => (
+        {Object.keys(values).map((key) => (
           <TextField
             key={key}
             fullWidth
             id={key}
             name={key}
-            label={partOfFields[key as KeyPartOfFields]}
-            value={formik.values[key as KeyPartOfFields]}
+            label={values[key as KeyValue]}
+            value={formik.values[key as KeyValue]}
             onChange={formik.handleChange}
-            error={formik.touched[key as KeyPartOfFields] && Boolean(formik.errors[key as KeyPartOfFields])}
-            helperText={formik.touched[key as KeyPartOfFields] && formik.errors[key as KeyPartOfFields]}
+            error={formik.touched[key as KeyValue] && Boolean(formik.errors[key as KeyValue])}
+            helperText={formik.touched[key as KeyValue] && formik.errors[key as KeyValue]}
           />
         ))}
         <FormControl sx={{ mt: 2, width: 200, background: '#fff' }}>

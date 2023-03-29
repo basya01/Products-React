@@ -8,6 +8,7 @@ import { LoadingStatus } from '../types/enums/LoadingStatus';
 
 interface ProductsProps extends TableProps {
   items: Product[];
+  onEditProduct: (product: Product) => void;
 }
 
 interface TableElem {
@@ -26,7 +27,7 @@ const tableElems: TableElem[] = [
   { id: 8, name: 'Категорія', key: 'category' },
 ];
 
-const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
+const Products: React.FC<ProductsProps> = ({ items, onEditProduct, ...props }) => {
   const { deleteProduct, status } = useDeleteProductById();
   const handlerDelete = (id: number) => {
     deleteProduct(id);
@@ -35,17 +36,6 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
   return (
     <Paper elevation={5} {...props}>
       <Table sx={{ textTransform: 'capitalize' }}>
-        <colgroup>
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-          <col style={{ width: 'min-content' }} />
-        </colgroup>
         <TableHead>
           <TableRow>
             {tableElems.map((item) => (
@@ -71,7 +61,7 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
                 </TableCell>
               ))}
               <TableCell component="th" scope="row">
-                <Button>
+                <Button onClick={() => onEditProduct(product)}>
                   <EditIcon sx={{ cursor: 'pointer' }} color="primary" fontSize="large" />
                 </Button>
                 <Button
