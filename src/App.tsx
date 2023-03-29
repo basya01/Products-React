@@ -106,14 +106,14 @@ const App = () => {
           categories={categories}
           onSubmit={onSubmitCreate}
           initialValues={{
-            title: 'asdasdads',
-            description: 'asdasdadsasdasdadsasdasdadsasdasdadsasdasdadsasdasdadsasdasdadsasdasdadsasdasdads',
-            price: '123',
-            discountPercentage: '123',
-            rating: '3',
-            stock: '123',
-            brand: 'sdasads',
-            category: 'smartphones',
+            title: '',
+            description: '',
+            price: '',
+            discountPercentage: '',
+            rating: '',
+            stock: '',
+            brand: '',
+            category: '',
           }}
         />
       )}
