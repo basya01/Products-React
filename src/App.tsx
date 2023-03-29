@@ -1,4 +1,5 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, LinearProgress } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { Container } from '@mui/system';
 import queryString from 'query-string';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ import {
   useUpdateProduct,
 } from './hooks';
 import { fetchProducts } from './store/slices/products';
+import { LoadingStatus } from './types/enums/LoadingStatus';
 import { Category, Product } from './types/models';
 
 const App = () => {
@@ -85,26 +87,41 @@ const App = () => {
     setUpdatedProduct(product);
   };
 
+  const isProductSuccessAndNotEmpty = products.status === LoadingStatus.SUCCEEDED && !!products.items.length;
+  const isProductNotIdleAndNotEmpty = products.status !== LoadingStatus.IDLE && !products.items.length;
+
   return (
     <div className="App">
       <Header />
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
-        {categories && <Categories categories={categories} status={categoriesStatus} />}
+        <Categories categories={categories} status={categoriesStatus} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <FilterSelect />
           <Button variant="contained" onClick={() => setShowCreateModal(true)}>
             Створити продукт
           </Button>
         </Box>
-        <Products items={products.items} sx={{ marginTop: 1 }} onEditProduct={onEditProduct} />
-        <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
+        {products.status === LoadingStatus.PENDING && <LinearProgress sx={{ marginTop: 1 }} />}
+        {isProductSuccessAndNotEmpty && (
+          <Products items={products.items} sx={{ marginTop: 1 }} onEditProduct={onEditProduct} />
+        )}
+        {isProductNotIdleAndNotEmpty && (
+          <Typography variant="h5" component="p">
+            Продукти не знайдені
+          </Typography>
+        )}
+        {isProductSuccessAndNotEmpty && (
+          <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
+        )}
       </Container>
       {categories && (
         <ModalFormProduct
+          buttonLable="Створити"
           open={showCreateModal}
           onClose={onCloseCreateModal}
           categories={categories}
           onSubmit={onSubmitCreate}
+          status={createProductStatus}
           initialValues={{
             title: '',
             description: '',
@@ -119,10 +136,12 @@ const App = () => {
       )}
       {categories && updatedProduct && (
         <ModalFormProduct
+          buttonLable="Оновити"
           open={showUpdateModal}
           onClose={onCloseUpdateModal}
           categories={categories}
           onSubmit={onSubmitUpdate}
+          status={updateProductStatus}
           initialValues={{
             title: updatedProduct.title,
             description: updatedProduct.description,

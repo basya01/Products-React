@@ -4,11 +4,11 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { setCategory } from '../store/slices/filters';
 import { LoadingStatus } from '../types/enums/LoadingStatus';
 import { Category } from '../types/models/Category';
+import CategoriesSkeleton from './CategoriesSkeleton';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   paddingBottom: 3,
-  maxWidth: '100%',
   textTransform: 'capitalize',
   gap: 5,
   overflow: 'auto',
@@ -26,7 +26,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 interface CategoriesProps {
-  categories: Category[];
+  categories?: Category[];
   status: LoadingStatus;
 }
 
@@ -41,17 +41,22 @@ const Categories: React.FC<CategoriesProps> = ({ categories, status }) => {
     }
     dispatch(setCategory(value));
   };
-
   return (
     <StyledBox>
-      {categories.map((item) => (
-        <Chip
-          sx={category === item ? { background: blue[700], color: '#fff' } : {}}
-          onClick={() => handlerCategory(item)}
-          label={item}
-          key={item}
-        />
-      ))}
+      {categories
+        ? categories.map((item) => (
+            <Chip
+              sx={category === item ? { background: blue[700], color: '#fff' } : {}}
+              onClick={() => handlerCategory(item)}
+              label={item}
+              key={item}
+            />
+          ))
+        : [...new Array(15)].map((_, index) => (
+            <Box key={index}>
+              <CategoriesSkeleton />
+            </Box>
+          ))}
     </StyledBox>
   );
 };

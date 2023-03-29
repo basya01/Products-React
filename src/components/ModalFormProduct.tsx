@@ -1,8 +1,9 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from '@mui/material';
 import blue from '@mui/material/colors/blue';
 import { useFormik } from 'formik';
-import React, { useMemo } from 'react';
+import React from 'react';
 import * as yup from 'yup';
+import { LoadingStatus } from '../types/enums/LoadingStatus';
 import { Category } from '../types/models';
 
 const validationSchema = yup.object({
@@ -37,6 +38,8 @@ interface ModalFormProductProps {
   categories: Category[];
   onSubmit: (values: Values) => void;
   initialValues: Values;
+  buttonLable: string;
+  status: LoadingStatus;
 }
 
 const values = {
@@ -57,6 +60,8 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
   categories,
   onSubmit,
   initialValues,
+  buttonLable,
+  status,
 }) => {
   const formik = useFormik({
     initialValues,
@@ -117,8 +122,14 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
             ))}
           </Select>
         </FormControl>
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Create
+        <Button
+          color="primary"
+          variant="contained"
+          fullWidth
+          type="submit"
+          disabled={status === LoadingStatus.PENDING}
+        >
+          {buttonLable}
         </Button>
       </Box>
     </Modal>

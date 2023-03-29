@@ -1,10 +1,10 @@
-import { Button, Paper, Table, TableBody, TableCell, TableHead, TableProps, TableRow } from '@mui/material';
-import React from 'react';
-import { Product } from '../types/models';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import { Button, Paper, Table, TableBody, TableCell, TableHead, TableProps, TableRow } from '@mui/material';
+import React from 'react';
 import { useDeleteProductById } from '../hooks';
 import { LoadingStatus } from '../types/enums/LoadingStatus';
+import { Product } from '../types/models';
 
 interface ProductsProps extends TableProps {
   items: Product[];
