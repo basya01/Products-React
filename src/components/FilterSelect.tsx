@@ -21,14 +21,8 @@ const FilterSelect = () => {
 
   return (
     <FormControl sx={{ mt: 2, width: 200, background: '#fff' }}>
-      <InputLabel id="demo-simple-select-label">Sort</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={sort}
-        label="Age"
-        onChange={handleChange}
-      >
+      <InputLabel>Сортування</InputLabel>
+      <Select value={sort} label="Сортування" onChange={handleChange}>
         <MenuItem value={''}>
           <em>Не сортувати</em>
         </MenuItem>
