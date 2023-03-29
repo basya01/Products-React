@@ -18,5 +18,4 @@ export type Category =
   | 'sunglasses'
   | 'automotive'
   | 'motorcycle'
-  | 'lighting'
-  | null;
+  | 'lighting';

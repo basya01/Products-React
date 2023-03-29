@@ -1,9 +1,10 @@
-import { Box, Button, Modal, TextField } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from '@mui/material';
 import blue from '@mui/material/colors/blue';
 import { useFormik } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
-import { checkIfFilesAreCorrectType, checkIfFilesAreTooBig } from '../utils/fileValidation';
+import { useCreateProduct } from '../hooks';
+import { Category, Product } from '../types/models';
 
 const validationSchema = yup.object({
   title: yup.string().min(7, 'Назва має бути не менше 7 символів').required("Назва обов'язкова"),
@@ -18,17 +19,12 @@ const validationSchema = yup.object({
   stock: yup.number().required("Сток обов'язковий"),
   brand: yup.string().min(3, 'Бренд має бути не менше 3 символів').required("Бренд обов'язковий"),
   category: yup.string().required("Категорія обо'язкова"),
-  images: yup
-    .array()
-    .nullable()
-    .required("Фото обов'язково")
-    .test('is-correct-file', 'Некоректний файл', checkIfFilesAreTooBig)
-    .test('is-big-file', 'Файл занадто великий', checkIfFilesAreCorrectType),
 });
 
-interface AuthModalProps {
+interface CreateProductModalProps {
   open: boolean;
-  onClose: () => void;
+  setOpen: (open: boolean) => void;
+  categories: Category[];
 }
 
 const partOfFields = {
@@ -50,7 +46,8 @@ type KeyPartOfFields =
   | 'stock'
   | 'brand';
 
-const CreateProductModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
+const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, categories }) => {
+  const { createProduct, status } = useCreateProduct();
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -61,14 +58,28 @@ const CreateProductModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
       stock: '',
       brand: '',
       category: '',
-      images: [],
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(1);
-      alert(JSON.stringify(values, null, 2));
+      const isSuccess = createProduct({
+        ...values,
+        price: +values.price,
+        discountPercentage: +values.discountPercentage,
+        rating: +values.rating,
+        stock: +values.stock,
+        category: values.category as Category,
+      });
+      isSuccess.then((isSuccess) => {
+        if (isSuccess) {
+          setOpen(false);
+        }
+      });
     },
   });
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title">
@@ -84,6 +95,9 @@ const CreateProductModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
           borderRadius: '8px',
           p: 4,
           width: '300px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
         }}
         onSubmit={formik.handleSubmit}
         component="form"
@@ -101,8 +115,26 @@ const CreateProductModal: React.FC<AuthModalProps> = ({ open, onClose }) => {
             helperText={formik.touched[key as KeyPartOfFields] && formik.errors[key as KeyPartOfFields]}
           />
         ))}
+        <FormControl sx={{ mt: 2, width: 200, background: '#fff' }}>
+          <InputLabel id="demo-simple-select-label">Категорія</InputLabel>
+          <Select
+            fullWidth
+            id="category"
+            name="category"
+            label="Категорія"
+            value={formik.values.category}
+            onChange={formik.handleChange}
+            error={formik.touched.category && Boolean(formik.errors.category)}
+          >
+            {categories.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
+          Create
         </Button>
       </Box>
     </Modal>

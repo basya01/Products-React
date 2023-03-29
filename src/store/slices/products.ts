@@ -14,7 +14,7 @@ interface Returned {
 }
 interface FetchProductsArgs {
   page: number;
-  category: Category;
+  category: Category | null;
   search: string;
   sort: SortType;
 }
@@ -47,7 +47,6 @@ interface ProductsState {
   limit: number;
   status: LoadingStatus;
 }
-
 const initialState: ProductsState = { items: [], total: 0, skip: 0, limit: 0, status: LoadingStatus.IDLE };
 
 const productsSlice = createSlice({

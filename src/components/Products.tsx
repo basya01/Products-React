@@ -35,6 +35,17 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
   return (
     <Paper elevation={5} {...props}>
       <Table sx={{ textTransform: 'capitalize' }}>
+        <colgroup>
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+          <col style={{ width: 'min-content' }} />
+        </colgroup>
         <TableHead>
           <TableRow>
             {tableElems.map((item) => (
@@ -63,7 +74,11 @@ const Products: React.FC<ProductsProps> = ({ items, ...props }) => {
                 <Button>
                   <EditIcon sx={{ cursor: 'pointer' }} color="primary" fontSize="large" />
                 </Button>
-                <Button color="error" onClick={() => handlerDelete(product.id)} disabled={status === LoadingStatus.PENDING}>
+                <Button
+                  color="error"
+                  onClick={() => handlerDelete(product.id)}
+                  disabled={status === LoadingStatus.PENDING}
+                >
                   <DeleteForeverIcon sx={{ cursor: 'pointer' }} color="error" fontSize="large" />
                 </Button>
               </TableCell>

@@ -6,7 +6,7 @@ import { Category } from '../../types/models/Category';
 interface FiltersState {
   page: number;
   search: string;
-  category: Category;
+  category: Category | null;
   sort: SortType;
 }
 
@@ -36,7 +36,7 @@ const productsSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
-    setCategory(state, action: PayloadAction<Category>) {
+    setCategory(state, action: PayloadAction<Category | null>) {
       state.category = action.payload;
     },
     setSort(state, action: PayloadAction<SortType>) {

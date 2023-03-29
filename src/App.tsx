@@ -11,12 +11,13 @@ import {
   PaginationProducts,
   Products,
 } from './components';
-import { useAppDispatch, useAppSelector } from './hooks';
+import { useAppDispatch, useAppSelector, useFetchCategories } from './hooks';
 import { fetchProducts } from './store/slices/products';
 
 const App = () => {
   const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.products);
+  const { categories, status } = useFetchCategories();
   const { page, category, search, sort } = useAppSelector((state) => state.filters);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const App = () => {
     <div className="App">
       <Header />
       <Container maxWidth="lg" component="main" sx={{ my: 4 }}>
-        <Categories />
+        {categories && <Categories categories={categories} status={status} />}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <FilterSelect />
           <Button variant="contained" onClick={() => setShowModal(true)}>
@@ -47,7 +48,9 @@ const App = () => {
         <Products items={products.items} sx={{ marginTop: 1 }} />
         <PaginationProducts sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }} />
       </Container>
-      <CreateProductModal open={showModal} onClose={() => setShowModal(false)} />
+      {categories && (
+        <CreateProductModal open={showModal} setOpen={setShowModal} categories={categories} />
+      )}
     </div>
   );
 };
