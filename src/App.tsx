@@ -32,7 +32,7 @@ const App = () => {
   const { createProduct, status: createProductStatus } = useCreateProduct();
   const { updateProduct, status: updateProductStatus } = useUpdateProduct();
   const [showCreateModal, setShowCreateModal] = useProductModal(createProductStatus);
-  const [showUpdateModal, setShowUpdateModal] = useProductModal(createProductStatus);
+  const [showUpdateModal, setShowUpdateModal] = useProductModal(updateProductStatus);
   const [updatedProduct, setUpdatedProduct] = useState<Product>();
 
   useEffect(() => {
