@@ -38,6 +38,7 @@ const productsSlice = createSlice({
     },
     setCategory(state, action: PayloadAction<Category | null>) {
       state.category = action.payload;
+      state.page = 1;
     },
     setSort(state, action: PayloadAction<SortType>) {
       const sortType = action.payload;
