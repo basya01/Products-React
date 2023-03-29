@@ -54,15 +54,15 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ open, setOpen, 
 
   const formik = useFormik({
     initialValues: {
-      title: 'asdasdasd',
+      title: '',
       description:
-        'asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd',
-      price: '123',
-      discountPercentage: '123',
-      rating: '2',
-      stock: '123',
-      brand: 'asdasdasdasads',
-      category: 'smartphones',
+        '',
+      price: '',
+      discountPercentage: '',
+      rating: '',
+      stock: '',
+      brand: '',
+      category: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
