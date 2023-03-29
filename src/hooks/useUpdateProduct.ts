@@ -4,6 +4,7 @@ import { addAlert } from '../store/slices/alerts';
 import { LoadingStatus } from '../types/enums/LoadingStatus';
 import { Product } from '../types/models';
 import { useAppDispatch } from './useAppDispatch';
+import { updateProduct as updateProductStore } from '../store/slices/products';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -24,6 +25,7 @@ export const useUpdateProduct = () => {
       setUpdatedProduct(data);
       setStatus(LoadingStatus.SUCCEEDED);
       dispatch(addAlert({ text: 'Продукт успішно оновлений.', severity: 'success' }));
+      dispatch(updateProductStore({ id, ...body }));
     } catch (error) {
       setStatus(LoadingStatus.FAILED);
       dispatch(addAlert({ text: 'Помилка! Продукт не оновлений.', severity: 'error' }));
